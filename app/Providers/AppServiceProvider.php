@@ -34,5 +34,10 @@ class AppServiceProvider extends ServiceProvider
         Gate::before(function ($user, $ability) {
             if ($user->hasRole('super_admin')) return true;
         });
+
+        // Force HTTPS in production / Render reverse-proxy environment
+        if ($this->app->environment('production') || env('FORCE_HTTPS', false)) {
+            \Illuminate\Support\Facades\URL::forceScheme('https');
+        }
     }
 }

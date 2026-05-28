@@ -1,3 +1,12 @@
+# Stage 1: Build Vite assets using Node.js
+FROM node:20-alpine AS node-builder
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+RUN npm run build
+
+# Stage 2: Final lightweight PHP Alpine Image
 FROM php:8.2-fpm-alpine
 
 # Install system and build dependencies
@@ -31,6 +40,9 @@ WORKDIR /var/www
 
 # Copy application files
 COPY . .
+
+# Copy compiled Vite assets from Stage 1 into the production directory
+COPY --from=node-builder /app/public/build ./public/build
 
 # Install dependencies
 RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progress

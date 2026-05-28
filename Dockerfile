@@ -1,6 +1,6 @@
 FROM php:8.2-fpm-alpine
 
-# Install system dependencies
+# Install system and build dependencies
 RUN apk add --no-cache \
     nginx \
     supervisor \
@@ -11,10 +11,17 @@ RUN apk add --no-cache \
     unzip \
     git \
     oniguruma-dev \
-    postgresql-dev
+    postgresql-dev \
+    autoconf \
+    g++ \
+    make \
+    openssl-dev
 
 # Install PHP extensions
 RUN docker-php-ext-install pdo_pgsql pdo_mysql bcmath gd opcache mbstring
+
+# Install and enable MongoDB PHP extension
+RUN pecl install mongodb && docker-php-ext-enable mongodb
 
 # Copy Composer from official image
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer

@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In – TravelMate</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Outfit:wght@300;400;600;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        :root {
+            --neon-pink: #ff00cc;
+            --neon-blue: #00f0ff;
+            --neon-purple: #7000ff;
+            --dark-bg: #030014;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--dark-bg);
+            overflow: hidden;
+            color: #fff;
+        }
+
+        /* LIQUID BACKGROUND */
+        .liquid-bg { position: fixed; inset: 0; z-index: -1; background: var(--dark-bg); overflow: hidden; }
+        .liquid-blob {
+            position: absolute; 
+            border-radius: 50%; 
+            filter: blur(120px); 
+            animation: liquidFloat 25s infinite alternate ease-in-out;
+            opacity: 0.6;
+        }
+        .blob-1 { background: var(--neon-pink); width: 70vw; height: 70vw; top: -20%; left: -10%; animation-delay: 0s; }
+        .blob-2 { background: var(--neon-blue); width: 60vw; height: 60vw; bottom: -20%; right: -10%; animation-delay: -5s; }
+        .blob-3 { background: var(--neon-purple); width: 80vw; height: 80vw; top: 30%; left: 20%; animation-delay: -10s; mix-blend-mode: screen; }
+
+        @keyframes liquidFloat {
+            0%   { transform: translate(0, 0) scale(1) rotate(0deg); border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; }
+            50%  { transform: translate(5vw, 10vh) scale(1.1) rotate(45deg); border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+            100% { transform: translate(-5vw, -5vh) scale(0.9) rotate(90deg); border-radius: 50% 50% 40% 60% / 40% 60% 50% 60%; }
+        }
+
+        /* GLASS CARD */
+        .glass-container {
+            display: flex;
+            width: 1100px;
+            max-width: 95vw;
+            min-height: 650px;
+            background: rgba(10, 10, 25, 0.25);
+            backdrop-filter: blur(50px);
+            -webkit-backdrop-filter: blur(50px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 40px;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.2);
+            overflow: hidden;
+            animation: cardEntrance 1.2s cubic-bezier(0.16, 1, 0.3, 1) both;
+            transform-style: preserve-3d;
+            will-change: transform;
+        }
+        @keyframes cardEntrance {
+            from { opacity: 0; transform: scale(0.9) translateY(60px) rotateX(10deg); }
+            to   { opacity: 1; transform: scale(1) translateY(0) rotateX(0deg); }
+        }
+
+        /* Staggered Animations */
+        .stagger-in {
+            opacity: 0;
+            animation: fadeUpItem 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        @keyframes fadeUpItem {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .stagger-1 { animation-delay: 0.2s; }
+        .stagger-2 { animation-delay: 0.3s; }
+        .stagger-3 { animation-delay: 0.4s; }
+        .stagger-4 { animation-delay: 0.5s; }
+        .stagger-5 { animation-delay: 0.6s; }
+        .stagger-6 { animation-delay: 0.7s; }
+
+        /* LEFT VISUAL PANEL */
+        .visual-panel {
+            flex: 1.2;
+            padding: 60px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border-right: 1px solid rgba(255,255,255,0.05);
+            background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0) 100%);
+        }
+        
+        .brand-logo {
+            font-family: 'Outfit', sans-serif;
+            font-size: 28px;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            letter-spacing: -1px;
+        }
+        .brand-icon {
+            width: 45px; height: 45px;
+            background: linear-gradient(135deg, var(--neon-pink), var(--neon-blue));
+            border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 22px;
+            box-shadow: 0 0 20px rgba(255,0,204,0.4);
+        }
+
+        .visual-content {
+            position: relative;
+            z-index: 2;
+        }
+        .visual-content h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 56px;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, #fff, rgba(255,255,255,0.5));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .visual-content p {
+            font-size: 18px;
+            color: rgba(255,255,255,0.6);
+            max-width: 400px;
+            line-height: 1.6;
+        }
+
+        /* Floating Holographic Ticket */
+        .holo-ticket {
+            position: absolute;
+            right: -20px;
+            bottom: 60px;
+            top: auto;
+            transform: rotate(-10deg);
+            width: 300px;
+            height: 170px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 20px;
+            backdrop-filter: blur(20px);
+            box-shadow: -20px 20px 40px rgba(0,0,0,0.5), inset 0 0 20px rgba(0,240,255,0.2);
+            padding: 24px;
+            display: flex; flex-direction: column; justify-content: space-between;
+            animation: ticketFloat 6s infinite alternate ease-in-out;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 1;
+        }
+        .holo-ticket::before {
+            content:''; position: absolute; inset: 0;
+            background: linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.4) 50%, transparent 60%);
+            background-size: 300% 300%;
+            animation: holoShimmer 4s infinite linear;
+            mix-blend-mode: overlay;
+        }
+        @keyframes holoShimmer { 0% { background-position: 100% 100%; } 100% { background-position: 0% 0%; } }
+        @keyframes ticketFloat {
+            0% { transform: translateY(0) rotate(-10deg) translateX(0); }
+            100% { transform: translateY(-15px) rotate(-5deg) translateX(-10px); box-shadow: -30px 30px 50px rgba(0,0,0,0.6), inset 0 0 30px rgba(255,0,204,0.3); }
+        }
+        .ht-top { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed rgba(255,255,255,0.2); padding-bottom: 12px; }
+        .ht-city { font-family: 'Outfit'; font-size: 28px; font-weight: 800; color: #fff; }
+        .ht-code { font-size: 14px; color: var(--neon-blue); letter-spacing: 2px; }
+        .ht-bottom { display: flex; justify-content: space-between; align-items: flex-end; }
+        .ht-label { font-size: 10px; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 1px; }
+        .ht-value { font-size: 16px; font-weight: 600; color: #fff; }
+
+        /* RIGHT FORM PANEL */
+        .form-panel {
+            flex: 1;
+            padding: 60px 70px;
+            background: rgba(0, 0, 0, 0.4);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .form-header { margin-bottom: 40px; }
+        .form-header h2 { font-family: 'Outfit'; font-size: 36px; font-weight: 800; margin-bottom: 10px; }
+        .form-header p { color: rgba(255,255,255,0.5); font-size: 15px; }
+
+        .session-status {
+            background: rgba(0, 240, 255, 0.1);
+            border-left: 4px solid var(--neon-blue);
+            padding: 12px 16px;
+            color: var(--neon-blue);
+            font-size: 14px;
+            border-radius: 0 8px 8px 0;
+            margin-bottom: 24px;
+        }
+
+        .input-group { margin-bottom: 24px; position: relative; }
+        .input-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(255,255,255,0.4);
+            margin-bottom: 8px;
+            transition: 0.3s;
+        }
+        .input-wrapper {
+            position: relative;
+            background: rgba(255,255,255,0.03);
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.08);
+            transition: 0.3s;
+            overflow: hidden;
+        }
+        .input-wrapper:focus-within {
+            background: rgba(255,255,255,0.06);
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.15);
+        }
+        .input-wrapper:focus-within + label { color: var(--neon-blue); }
+        .form-input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            padding: 18px 20px;
+            color: #fff;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 16px;
+            outline: none;
+        }
+        .form-input::placeholder { color: rgba(255,255,255,0.2); }
+        .error-msg { font-size: 12px; color: #ff3366; margin-top: 8px; }
+
+        .form-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 35px; font-size: 14px; }
+        .remember-me { display: flex; align-items: center; gap: 10px; cursor: pointer; color: rgba(255,255,255,0.6); }
+        .remember-me input { accent-color: var(--neon-blue); width: 16px; height: 16px; }
+        .forgot-link { color: rgba(255,255,255,0.6); text-decoration: none; transition: 0.3s; }
+        .forgot-link:hover { color: var(--neon-blue); text-shadow: 0 0 10px rgba(0,240,255,0.5); }
+
+        .btn-submit {
+            width: 100%;
+            padding: 18px;
+            border-radius: 16px;
+            border: none;
+            background: linear-gradient(45deg, var(--neon-pink), var(--neon-purple));
+            color: #fff;
+            font-family: 'Outfit', sans-serif;
+            font-size: 18px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(255, 0, 204, 0.4);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-submit::after {
+            content: ''; position: absolute; inset: 0; background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple));
+            opacity: 0; transition: 0.4s; z-index: 0;
+        }
+        .btn-submit span { position: relative; z-index: 1; }
+        .btn-submit:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 15px 40px rgba(0, 240, 255, 0.5); }
+        .btn-submit:hover::after { opacity: 1; }
+
+        .btn-google {
+            display: flex; align-items: center; justify-content: center; gap: 12px;
+            width: 100%; padding: 16px; margin-top: 20px;
+            background: transparent; border: 1px solid rgba(255,255,255,0.15); border-radius: 16px;
+            color: #fff; font-family: 'Space Grotesk'; font-size: 15px; font-weight: 600;
+            cursor: pointer; transition: 0.3s; text-decoration: none;
+        }
+        .btn-google:hover { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.3); transform: translateY(-2px); }
+
+        .register-wrap { text-align: center; margin-top: 40px; font-size: 15px; color: rgba(255,255,255,0.5); }
+        .register-wrap a { color: var(--neon-blue); text-decoration: none; font-weight: 700; margin-left: 5px; transition: 0.3s; }
+        .register-wrap a:hover { text-shadow: 0 0 15px rgba(0,240,255,0.6); }
+
+        /* Eye Icon */
+        .toggle-pwd { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); background: none; border: none; color: rgba(255,255,255,0.3); cursor: pointer; font-size: 18px; outline: none; transition: 0.3s; }
+        .toggle-pwd:hover { color: #fff; }
+
+        @media (max-width: 900px) {
+            .visual-panel { display: none; }
+            .glass-container { width: 90vw; border-radius: 30px; }
+            .form-panel { padding: 40px 30px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="liquid-bg">
+        <div class="liquid-blob blob-1"></div>
+        <div class="liquid-blob blob-2"></div>
+        <div class="liquid-blob blob-3"></div>
+    </div>
+
+    <div class="glass-container">
+        <!-- LEFT VISUAL -->
+        <div class="visual-panel stagger-in stagger-1">
+            <div class="brand-logo stagger-in stagger-2">
+                <div class="brand-icon"><i class="fas fa-planet-ringed" style="font-family: 'Font Awesome 6 Free';"></i></div>
+                TravelMate
+            </div>
+            
+            <div class="visual-content stagger-in stagger-3">
+                <h1>Redefine<br>Exploration.</h1>
+                <p>Log in to access your neural-linked itineraries, predictive travel metrics, and seamless global bookings.</p>
+            </div>
+
+            <div class="holo-ticket">
+                <div class="ht-top">
+                    <div>
+                        <div class="ht-label">Destination</div>
+                        <div class="ht-city">NEO-TOKYO</div>
+                    </div>
+                    <div class="ht-code">NRT</div>
+                </div>
+                <div class="ht-bottom">
+                    <div>
+                        <div class="ht-label">Flight</div>
+                        <div class="ht-value">TM-0842</div>
+                    </div>
+                    <div>
+                        <div class="ht-label">Class</div>
+                        <div class="ht-value">FIRST</div>
+                    </div>
+                    <div style="text-align: right;">
+                        <i class="fas fa-qrcode" style="font-size: 32px; color: rgba(255,255,255,0.8);"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div style="font-size: 13px; color: rgba(255,255,255,0.3); font-weight: 600; letter-spacing: 2px;">
+                SYSTEM SECURED &middot; ENCRYPTED
+            </div>
+        </div>
+
+        <!-- RIGHT FORM -->
+        <div class="form-panel">
+            <div class="form-header stagger-in stagger-1">
+                <h2>Initialize Link</h2>
+                <p>Authenticate to access the TravelMate ecosystem.</p>
+            </div>
+
+            @if (session('status'))
+                <div class="session-status stagger-in stagger-2">{{ session('status') }}</div>
+            @endif
+
+            <form method="POST" action="{{ route('login') }}">
+                @csrf
+
+                <div class="input-group stagger-in stagger-2">
+                    <label for="email">Neural ID (Email)</label>
+                    <div class="input-wrapper">
+                        <input id="email" type="email" name="email" class="form-input" placeholder="traveler@domain.com" value="{{ old('email') }}" required autofocus autocomplete="username">
+                    </div>
+                    @error('email')
+                        <div class="error-msg">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="input-group stagger-in stagger-3">
+                    <label for="password">Security Key (Password)</label>
+                    <div class="input-wrapper">
+                        <input id="password" type="password" name="password" class="form-input" placeholder="••••••••" required autocomplete="current-password" style="padding-right: 50px;">
+                        <button type="button" id="togglePassword" class="toggle-pwd" title="Toggle Visibility">
+                            <i class="far fa-eye" id="eyeIcon"></i>
+                        </button>
+                    </div>
+                    @error('password')
+                        <div class="error-msg">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="form-actions stagger-in stagger-4">
+                    <label class="remember-me">
+                        <input type="checkbox" name="remember" id="remember_me">
+                        Keep me connected
+                    </label>
+                    @if (Route::has('password.request'))
+                        <a href="{{ route('password.request') }}" class="forgot-link">Lost key?</a>
+                    @endif
+                </div>
+
+                <button type="submit" class="btn-submit stagger-in stagger-5">
+                    <span>Initiate Sequence</span>
+                </button>
+            </form>
+
+
+            @if (Route::has('register'))
+                <div class="register-wrap stagger-in stagger-6">
+                    Unregistered entity? <a href="{{ route('register') }}">Create Neural Profile</a>
+                </div>
+            @endif
+        </div>
+    </div>
+
+    <script>
+        // 3D Parallax Tilt Effect
+        setTimeout(() => {
+            const card = document.querySelector('.glass-container');
+            const bgBlobs = document.querySelector('.liquid-bg');
+            
+            card.style.transition = 'transform 0.1s ease-out';
+            
+            document.addEventListener('mousemove', (e) => {
+                if(window.innerWidth > 900) {
+                    let xAxis = (window.innerWidth / 2 - e.pageX) / 50;
+                    let yAxis = (window.innerHeight / 2 - e.pageY) / 50;
+                    card.style.transform = `perspective(1200px) rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+                    
+                    // Subtle background pan
+                    bgBlobs.style.transform = `translate(${xAxis * -2}px, ${yAxis * -2}px)`;
+                }
+            });
+
+            document.addEventListener('mouseleave', () => {
+                card.style.transform = `perspective(1200px) rotateY(0deg) rotateX(0deg)`;
+                bgBlobs.style.transform = `translate(0px, 0px)`;
+            });
+        }, 1200); // Wait for entrance animation to finish
+
+        // Password visibility toggle
+        const togglePassword = document.querySelector('#togglePassword');
+        const password = document.querySelector('#password');
+        const eyeIcon = document.querySelector('#eyeIcon');
+
+        if (togglePassword) {
+            togglePassword.addEventListener('click', function () {
+                const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+                password.setAttribute('type', type);
+                
+                if (type === 'password') {
+                    eyeIcon.classList.remove('fa-eye-slash');
+                    eyeIcon.classList.add('fa-eye');
+                    togglePassword.style.color = 'rgba(255,255,255,0.3)';
+                } else {
+                    eyeIcon.classList.remove('fa-eye');
+                    eyeIcon.classList.add('fa-eye-slash');
+                    togglePassword.style.color = 'var(--neon-blue)';
+                }
+            });
+        }
+    </script>
+</body>
+</html>

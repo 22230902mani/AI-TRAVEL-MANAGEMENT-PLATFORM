@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="">
+    <title>AI Itinerary Builder — AI Travel Ecosystem</title>
+    <meta name="description" content="TravelMate – AI-powered travel planning, smart itineraries, and seamless bookings.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preload" as="style" href="http://localhost:8100/build/assets/app-CEwZte8_.css" /><link rel="modulepreload" as="script" href="http://localhost:8100/build/assets/app-YtA_lim_.js" /><link rel="stylesheet" href="http://localhost:8100/build/assets/app-CEwZte8_.css" /><script type="module" src="http://localhost:8100/build/assets/app-YtA_lim_.js"></script>    <style>
+        :root {
+            /* ── NEW PREMIUM PALETTE ── */
+            /* Blues */
+            --blue-deep:   #1e3a8a;
+            --blue-vivid:  #2563eb;
+            --blue-glow:   #3b82f6;
+
+            /* Purples */
+            --purple-deep: #4c1d95;
+            --purple-vivid:#7c3aed;
+            --purple-glow: #a855f7;
+
+            /* Magentas / Pinks */
+            --pink-deep:   #831843;
+            --pink-vivid:  #db2777;
+            --pink-glow:   #ec4899;
+
+            /* Reds */
+            --red-deep:    #7f1d1d;
+            --red-vivid:   #dc2626;
+
+            /* Emerald accent */
+            --emerald-500: #00c853;
+            --emerald-400: #34D399;
+            --emerald-glow:rgba(0,200,83,0.3);
+
+            /* Neutrals */
+            --slate-100:   #f1f5f9;
+            --slate-300:   #cbd5e1;
+            --slate-400:   #94a3b8;
+            --slate-700:   #1e2540;
+            --slate-900:   #0a0d1a;
+
+            /* ── MAIN ASSIGNMENTS ── */
+            --bg:          #080b14;
+            --surface:     #111827;
+            --surface2:    #1a2035;
+            --border:      rgba(255,255,255,0.08);
+            --text:        #f1f5f9;
+            --muted:       #94a3b8;
+
+            --nav-bg:      #06080f;
+            --nav-text:    #cbd5e1;
+
+            /* Primary = Violet-Blue gradient */
+            --primary:     #7c3aed;
+            --primary-dark:#4c1d95;
+            --primary-grad:linear-gradient(135deg,#7c3aed,#2563eb);
+
+            /* Secondary = Emerald */
+            --secondary:   #00c853;
+
+            /* Accent = Magenta-Pink */
+            --accent:      #db2777;
+            --accent-grad: linear-gradient(135deg,#db2777,#7c3aed);
+
+            /* Gold stays */
+            --gold:        #fbbf24;
+
+            --success:     #00c853;
+            --success-bg:  rgba(0,200,83,0.12);
+            --success-border:rgba(0,200,83,0.3);
+
+            --footer-bg:   #06080f;
+            --footer-text: #94a3b8;
+
+            --card-bg:     #111827;
+            --card-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            --radius:      18px;
+            --shadow:      0 8px 24px rgba(0,0,0,0.35);
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family:'Inter',sans-serif;
+            background:var(--bg);
+            color:var(--text);
+            line-height:1.6;
+            background-image:
+                radial-gradient(ellipse at 20% 20%, rgba(124,58,237,0.07) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(37,99,235,0.07) 0%, transparent 50%);
+            background-attachment: fixed;
+        }
+        a { color:inherit; text-decoration:none; }
+
+        /* NAVBAR */
+        .navbar {
+            position:fixed; top:0; width:100%; z-index:1000; padding:0 2rem;
+            background:rgba(6,8,15,0.85); backdrop-filter:blur(24px) saturate(180%);
+            -webkit-backdrop-filter:blur(24px) saturate(180%);
+            border-bottom:1px solid rgba(124,58,237,0.2); transition:all .3s;
+            box-shadow:0 4px 30px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04);
+        }
+        .nav-inner { max-width:1400px; margin:0 auto; display:flex; align-items:center;
+            justify-content:space-between; height:72px; }
+        .nav-logo {
+            font-family:'Playfair Display',serif; font-size:1.65rem; font-weight:900;
+            background:linear-gradient(135deg,#a855f7 0%,#3b82f6 50%,#00c853 100%);
+            -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+            letter-spacing:-.02em;
+        }
+        .nav-links { display:flex; align-items:center; gap:2rem; list-style:none; }
+        .nav-links a {
+            font-size:.88rem; font-weight:500; color:rgba(255,255,255,0.65);
+            transition:.25s; padding:.4rem 0; border-bottom:2px solid transparent;
+            letter-spacing:.02em;
+        }
+        .nav-links a:hover { color:#fff; }
+        .nav-links a.active { color:#fff; border-bottom-color:#7c3aed; }
+        .nav-actions { display:flex; align-items:center; gap:1rem; }
+        .btn {
+            display:inline-flex; align-items:center; gap:.5rem; padding:.6rem 1.5rem;
+            border-radius:50px; font-weight:600; font-size:.85rem; cursor:pointer;
+            transition:all .25s; border:none; letter-spacing:.03em;
+        }
+        .btn-primary {
+            background:linear-gradient(135deg,#7c3aed,#2563eb);
+            color:#fff; box-shadow:0 4px 20px rgba(124,58,237,0.45);
+        }
+        .btn-primary:hover { transform:translateY(-2px); box-shadow:0 8px 30px rgba(124,58,237,0.65); filter:brightness(1.1); }
+        .btn-outline { background:transparent; border:1px solid rgba(255,255,255,0.18); color:rgba(255,255,255,0.85); }
+        .btn-outline:hover { border-color:#7c3aed; color:#a855f7; background:rgba(124,58,237,0.1); }
+        .btn-sm { padding:.38rem 1rem; font-size:.8rem; }
+        .btn-danger { background:linear-gradient(135deg,#dc2626,#7f1d1d); color:#fff; box-shadow:0 4px 16px rgba(220,38,38,0.4); }
+
+        /* DROPDOWN */
+        .nav-dropdown { position:relative; }
+        .dropdown-menu { position:absolute; top:calc(100% + 10px); right:0; background:var(--surface);
+            border:1px solid var(--border); border-radius:var(--radius); min-width:200px; padding:.5rem 0;
+            opacity:0; visibility:hidden; transform:translateY(-8px); transition:.2s; box-shadow:var(--shadow); }
+        .nav-dropdown:hover .dropdown-menu { opacity:1; visibility:visible; transform:translateY(0); }
+        .dropdown-menu a { display:flex; align-items:center; gap:.75rem; padding:.7rem 1.2rem;
+            font-size:.88rem; color:var(--muted); transition:.15s; }
+        .dropdown-menu a:hover { color:var(--text); background:var(--surface2); }
+        .dropdown-menu hr { border:none; border-top:1px solid var(--border); margin:.4rem 0; }
+        .avatar-sm { width:36px; height:36px; border-radius:50%; object-fit:cover;
+            border:2px solid var(--primary); cursor:pointer; }
+
+        /* NOTIFICATION BADGE */
+        .notif-badge { position:relative; }
+        .notif-badge .badge { position:absolute; top:-4px; right:-4px; background:var(--accent);
+            color:#fff; font-size:.65rem; width:18px; height:18px; border-radius:50%;
+            display:flex; align-items:center; justify-content:center; font-weight:700; }
+
+        /* MAIN */
+        main { padding-top:70px; min-height:100vh; }
+
+        /* FOOTER */
+        footer { background:var(--footer-bg); border-top:1px solid rgba(255,255,255,0.08); padding:4rem 2rem 2rem; }
+        .footer-inner { max-width:1400px; margin:0 auto; }
+        .footer-grid { display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:3rem; margin-bottom:3rem; }
+        .footer-brand p { color:var(--footer-text); font-size:.9rem; margin:.75rem 0 1.5rem; max-width:280px; }
+        .footer-social { display:flex; gap:.75rem; }
+        .social-btn { width:38px; height:38px; border-radius:50%; background:rgba(255,255,255,0.07);
+            border:1px solid rgba(255,255,255,0.12); display:flex; align-items:center; justify-content:center;
+            color:var(--footer-text); transition:.2s; font-size:.9rem; }
+        .social-btn:hover { background:linear-gradient(135deg,#7c3aed,#2563eb); color:#fff; border-color:transparent; }
+        .footer-col h4 { font-size:.95rem; font-weight:700; margin-bottom:1rem; color:#fff; letter-spacing:.05em; }
+        .footer-col ul { list-style:none; display:flex; flex-direction:column; gap:.6rem; }
+        .footer-col ul a { color:var(--footer-text); font-size:.88rem; transition:.2s; }
+        .footer-col ul a:hover { color:#a855f7; padding-left:.25rem; }
+        .footer-bottom { border-top:1px solid rgba(255,255,255,0.08); padding-top:1.5rem;
+            display:flex; align-items:center; justify-content:space-between;
+            color:var(--footer-text); font-size:.85rem; }
+
+        /* CARDS - Premium glassmorphism */
+        .card {
+            background:linear-gradient(145deg, rgba(30,32,60,0.9) 0%, rgba(17,24,39,0.95) 100%);
+            border:1px solid rgba(255,255,255,0.08);
+            border-radius:var(--radius);
+            overflow:hidden;
+            transition:all .4s cubic-bezier(0.175,0.885,0.32,1.275);
+            box-shadow:var(--shadow);
+            position:relative;
+        }
+        .card::before {
+            content:'';
+            position:absolute; top:0; left:0; right:0; height:1px;
+            background:linear-gradient(90deg,transparent,rgba(124,58,237,0.4),transparent);
+            pointer-events:none;
+        }
+        .card:hover {
+            transform:translateY(-6px);
+            box-shadow:0 24px 48px rgba(0,0,0,0.5), 0 0 0 1px rgba(124,58,237,0.25);
+            z-index:10;
+        }
+
+        /* SECTION */
+        .section { padding:5rem 2rem; }
+        .section-inner { max-width:1400px; margin:0 auto; }
+        .section-header { text-align:center; margin-bottom:3rem; }
+        .section-tag {
+            display:inline-block;
+            background:linear-gradient(135deg,rgba(124,58,237,0.15),rgba(37,99,235,0.15));
+            color:#a855f7;
+            padding:.35rem 1.1rem; border-radius:50px; font-size:.78rem; font-weight:700;
+            letter-spacing:.1em; text-transform:uppercase; margin-bottom:.75rem;
+            border:1px solid rgba(124,58,237,0.3);
+            box-shadow:0 0 12px rgba(124,58,237,0.15);
+        }
+        .section-title { font-family:'Playfair Display',serif; font-size:2.5rem; font-weight:900; margin-bottom:.75rem; }
+        .section-sub { color:var(--muted); font-size:1.05rem; max-width:600px; margin:0 auto; }
+
+        /* GRID */
+        .grid-3 { display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem; }
+        .grid-4 { display:grid; grid-template-columns:repeat(4,1fr); gap:1.5rem; }
+        .grid-2 { display:grid; grid-template-columns:repeat(2,1fr); gap:1.5rem; }
+
+        /* ALERTS */
+        .alert { padding:1rem 1.25rem; border-radius:12px; margin-bottom:1rem; font-size:.9rem; }
+        .alert-success { background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.4); color:#6ee7b7; font-weight:500; }
+        .alert-error   { background:rgba(239,68,68,0.15); border:1px solid rgba(239,68,68,0.4); color:#fca5a5; }
+        .alert-info    { background:rgba(59,130,246,0.15); border:1px solid rgba(59,130,246,0.4); color:#93c5fd; }
+
+        /* FORM */
+        .form-group { margin-bottom:1.25rem; }
+        .form-label { display:block; font-size:.87rem; font-weight:600; color:rgba(255,255,255,0.7); margin-bottom:.5rem; letter-spacing:.03em; }
+        .form-control {
+            width:100%; padding:.75rem 1rem;
+            background:rgba(255,255,255,0.06);
+            border:1px solid rgba(255,255,255,0.15);
+            border-radius:10px; color:#fff; font-size:.92rem;
+            transition:.2s; font-family:inherit;
+            backdrop-filter:blur(6px);
+        }
+        .form-control:focus { outline:none; border-color:#ff6f00; box-shadow:0 0 0 3px rgba(255,111,0,.2); background:rgba(255,255,255,0.1); }
+        .form-control::placeholder { color:rgba(255,255,255,0.35); }
+        select.form-control option { background:#1E293B; color:#fff; }
+
+        /* BADGE */
+        .badge-pill { padding:.28rem .85rem; border-radius:50px; font-size:.73rem; font-weight:700; letter-spacing:.04em; }
+        .badge-primary { background:rgba(124,58,237,.2); color:#c4b5fd; border:1px solid rgba(124,58,237,.3); }
+        .badge-success { background:rgba(0,200,83,.15); color:#6ee7b7; border:1px solid rgba(0,200,83,.3); }
+        .badge-warning { background:rgba(251,191,36,.15); color:#fde68a; border:1px solid rgba(251,191,36,.3); }
+        .badge-danger  { background:rgba(220,38,38,.15); color:#fca5a5; border:1px solid rgba(220,38,38,.3); }
+
+        /* STAR RATING */
+        .stars { color:#ffd700; font-size:.9rem; }
+
+        /* CHATBOT WIDGET */
+        #chatbot-widget { position:fixed; bottom:2rem; right:2rem; z-index:9999; font-family:'Inter',sans-serif; }
+        #chatbot-toggle {
+            width:64px; height:64px; border-radius:18px;
+            background:rgba(255,255,255,0.02); backdrop-filter:blur(10px);
+            color:#fff; font-size:1.8rem;
+            cursor:pointer; display:flex; align-items:center; justify-content:center;
+            position:relative; z-index:100; border:none;
+            transition:all .3s;
+            box-shadow: 0 10px 25px rgba(236,72,153,0.3);
+        }
+        #chatbot-toggle::before {
+            content:''; position:absolute; inset:0;
+            border-radius:18px; padding:2px;
+            background:linear-gradient(135deg, #3b82f6, #ec4899);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events:none;
+            transition:all .3s;
+        }
+        #chatbot-toggle:hover {
+            transform:translateY(-5px) scale(1.05);
+            background:rgba(255,255,255,0.05);
+            box-shadow: 0 15px 35px rgba(236,72,153,0.5);
+        }
+        #chatbot-toggle:hover::before {
+            background:linear-gradient(135deg, #ec4899, #3b82f6);
+        }
+        #chatbot-toggle i { filter:drop-shadow(0 0 5px rgba(255,255,255,0.3)); transition:all .3s; }
+        #chatbot-box { position:absolute; bottom:75px; right:0; width:380px; height:520px;
+            background:rgba(10,13,26,0.95); backdrop-filter:blur(24px); border:1px solid rgba(255,255,255,0.1); border-radius:16px;
+            box-shadow:0 20px 50px rgba(0,0,0,0.6); display:none; flex-direction:column; overflow:hidden; }
+        #chatbot-box.open { display:flex; }
+        .chatbot-header { padding:1.2rem 1.25rem; background:linear-gradient(135deg, rgba(30,58,138,0.5), rgba(157,23,77,0.4)); border-bottom:1px solid rgba(255,255,255,0.08); position:relative; }
+        .cb-header-inner { display:flex; justify-content:space-between; align-items:flex-start; }
+        .cb-title-wrap { display:flex; gap:.75rem; align-items:center; }
+        .cb-icon-box { width:40px; height:40px; border-radius:10px; background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.1); display:flex; align-items:center; justify-content:center; color:#3b82f6; position:relative; }
+        .cb-icon-box::after { content:''; position:absolute; top:-3px; right:-3px; width:8px; height:8px; border-radius:50%; background:#10b981; box-shadow:0 0 8px #10b981; }
+        .cb-title { font-family:'Orbitron',monospace; font-weight:900; font-style:italic; font-size:1.1rem; color:#fff; letter-spacing:.1em; margin-bottom:.15rem; text-transform:uppercase; }
+        .cb-status { display:flex; align-items:center; gap:.4rem; font-size:.65rem; color:rgba(255,255,255,0.6); font-weight:800; letter-spacing:.1em; text-transform:uppercase; }
+        .cb-status-dot { width:6px; height:6px; border-radius:50%; background:#10b981; }
+        .cb-actions { display:flex; gap:.4rem; }
+        .cb-action-btn { width:28px; height:28px; border-radius:6px; background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.1); color:rgba(255,255,255,0.6); display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:.8rem; transition:.2s; }
+        .cb-action-btn:hover { background:rgba(255,255,255,0.1); color:#fff; }
+
+        .chatbot-body { flex:1; overflow-y:auto; padding:1.25rem; display:flex; flex-direction:column; gap:1.25rem; }
+        .chat-block { display:flex; flex-direction:column; gap:.4rem; }
+        .chat-sender-lbl { display:flex; align-items:center; gap:.4rem; font-size:.65rem; color:rgba(255,255,255,0.5); font-weight:800; letter-spacing:.1em; text-transform:uppercase; }
+        .chat-msg { max-width:85%; padding:.85rem 1rem; border-radius:12px; font-size:.88rem; line-height:1.5; }
+        .chat-msg.user { background:linear-gradient(135deg,#3b82f6,#2563eb); color:#fff; margin-left:auto; border-bottom-right-radius:4px; box-shadow:0 4px 15px rgba(37,99,235,0.3); }
+        .chat-msg.bot  { background:rgba(255,255,255,0.03); color:rgba(255,255,255,0.9); border:1px solid rgba(255,255,255,0.08); border-top-left-radius:4px; }
+        
+        .chat-suggestions { display:flex; flex-wrap:wrap; gap:.4rem; margin-top:.25rem; margin-left:auto; justify-content:flex-end; }
+        .chat-suggestion { padding:.4rem .8rem; background:rgba(59,130,246,0.1); color:#93c5fd; border-radius:50px; font-size:.75rem; cursor:pointer; border:1px solid rgba(59,130,246,0.2); transition:.2s; }
+        .chat-suggestion:hover { background:rgba(59,130,246,0.2); color:#fff; }
+
+        .chatbot-input { padding:1rem; border-top:1px solid rgba(255,255,255,0.05); display:flex; gap:.75rem; background:rgba(0,0,0,0.2); }
+        .chatbot-input input { flex:1; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:.75rem 1rem; color:#fff; font-size:.88rem; transition:.3s; }
+        .chatbot-input input:focus { outline:none; border-color:rgba(59,130,246,0.5); background:rgba(59,130,246,0.05); }
+        .chatbot-input button { width:42px; height:42px; border-radius:12px; background:linear-gradient(135deg,#3b82f6,#2563eb); border:none; color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 12px rgba(37,99,235,0.4); transition:.3s; }
+        .chatbot-input button:hover { transform:translateY(-2px); box-shadow:0 6px 16px rgba(37,99,235,0.5); }
+
+        /* UTILS */
+        .text-primary { color:#ff6f00; }
+        .text-secondary { color:#0288d1; }
+        .text-muted { color:var(--muted); }
+        .text-accent { color:var(--accent); }
+        .text-gold { color:var(--gold); }
+        /* Sky Blue icon utility */
+        .icon-sky, .fa, .fas, .far, .fab { color:inherit; }
+        .icon-sky { color:#0288d1 !important; }
+        .mt-1 { margin-top:.5rem; } .mt-2 { margin-top:1rem; } .mt-3 { margin-top:1.5rem; } .mt-4 { margin-top:2rem; }
+        .mb-1 { margin-bottom:.5rem; } .mb-2 { margin-bottom:1rem; } .mb-3 { margin-bottom:1.5rem; }
+        .flex { display:flex; } .items-center { align-items:center; } .justify-between { justify-content:space-between; }
+        .gap-1 { gap:.5rem; } .gap-2 { gap:1rem; } .gap-3 { gap:1.5rem; }
+        .font-bold { font-weight:700; } .font-semibold { font-weight:600; }
+        .text-sm { font-size:.85rem; } .text-xs { font-size:.75rem; }
+        .rounded-full { border-radius:50px; }
+
+        @media(max-width:768px) {
+            .nav-links { display:none; }
+            .grid-3,.grid-4 { grid-template-columns:1fr; }
+            .grid-2 { grid-template-columns:1fr; }
+            .footer-grid { grid-template-columns:1fr 1fr; }
+            .section-title { font-size:1.8rem; }
+        }
+    </style>
+    </head>
+<body>
+
+
+<nav class="navbar">
+    <div class="nav-inner">
+        <div style="display:flex; align-items:center; gap: 1.5rem;">
+            <a href="http://localhost:8100" class="nav-logo">✈️ TravelMate</a>
+            <!-- Global Live Clock -->
+            <div style="display:flex; align-items:center; gap: 0.5rem; background: rgba(0, 240, 255, 0.05); border: 1px solid rgba(0, 240, 255, 0.2); padding: 0.35rem 1rem; border-radius: 50px; box-shadow: 0 0 10px rgba(0, 240, 255, 0.1);">
+                <i class="far fa-clock" style="color: #00f0ff; font-size: 0.95rem;"></i>
+                <div id="global-live-clock" style="font-family: 'Space Grotesk', monospace; font-size: 0.85rem; font-weight: 700; color: #fff; letter-spacing: 1px;">--:--:--</div>
+            </div>
+        </div>
+        <ul class="nav-links">
+            <li><a href="http://localhost:8100" class="">Home</a></li>
+            <li><a href="http://localhost:8100/destinations" class="">Destinations</a></li>
+            <li><a href="http://localhost:8100/packages" class="">Packages</a></li>
+                        <li><a href="http://localhost:8100/contact" class="">Contact Us</a></li>
+        </ul>
+        <div class="nav-actions">
+                            <a href="http://localhost:8100/login" class="btn btn-outline btn-sm">Log In</a>
+                <a href="http://localhost:8100/register" class="btn btn-primary btn-sm">Get Started</a>
+                    </div>
+    </div>
+</nav>
+
+<main>
+            <div style="background:linear-gradient(135deg,#0f0f2e,#0a1628);padding:4rem 2rem 2rem">
+    <div style="max-width:800px;margin:0 auto;text-align:center">
+        <div class="section-tag">🤖 AI Engine</div>
+        <h1 style="font-family:'Playfair Display',serif;font-size:2.5rem;font-weight:900;margin:.5rem 0">Generate Your Perfect Itinerary</h1>
+        <p style="color:var(--muted)">Powered by genetic algorithm optimization + collaborative filtering from 10M+ travel logs</p>
+    </div>
+</div>
+<section class="section" style="padding-top:2rem">
+    <div class="section-inner" style="max-width:900px;margin:0 auto">
+        <div class="card" style="padding:2.5rem">
+            <form id="itinerary-form">
+                <input type="hidden" name="_token" value="" autocomplete="off">                                <div class="grid-2" style="gap:1.5rem;margin-bottom:1.5rem">
+                    <div class="form-group" style="position:relative">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.45rem;">
+                            <label class="form-label" style="margin:0;"><i class="fas fa-map-marker-alt" style="color:var(--primary)"></i> Starting City (Origin) *</label>
+                            <button type="button" onclick="detectLiveOrigin()" class="btn btn-sm btn-ghost" style="padding:0.15rem 0.6rem; font-size:0.75rem; color:var(--primary); border:1px solid var(--border);"><i class="fas fa-location-crosshairs"></i> Detect Live Location</button>
+                        </div>
+                        <input type="text" name="origin" id="origin-input" class="form-control" placeholder="e.g. Mumbai, Phagwara, Bengaluru" value="Mumbai, India" autocomplete="off" required>
+                        <div id="origin-autocomplete" style="display:none;position:absolute;top:100%;left:0;right:0;background:#151538;border:1px solid rgba(255,255,255,0.15);border-radius:12px;box-shadow:0 15px 35px rgba(0,0,0,0.6);z-index:999;max-height:220px;overflow-y:auto;margin-top:.25rem">
+                            <!-- Autocomplete results will appear here -->
+                        </div>
+                    </div>
+                    <div class="form-group" style="position:relative">
+                        <label class="form-label"><i class="fas fa-globe" style="color:var(--primary)"></i> Destination *</label>
+                        <input type="text" name="destination_name" id="dest-input" class="form-control" placeholder="Search any destination in the world" autocomplete="off" required value="Goa, India">
+                        <div id="dest-autocomplete" style="display:none;position:absolute;top:100%;left:0;right:0;background:#151538;border:1px solid rgba(255,255,255,0.15);border-radius:12px;box-shadow:0 15px 35px rgba(0,0,0,0.6);z-index:999;max-height:220px;overflow-y:auto;margin-top:.25rem">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label"><i class="fas fa-calendar" style="color:var(--secondary)"></i> Start Date *</label>
+                        <input type="date" name="start_date" class="form-control" min="2026-05-23" required value="2026-05-30">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label"><i class="fas fa-clock" style="color:var(--accent)"></i> Duration (days) *</label>
+                        <input type="number" name="duration_days" class="form-control" min="1" max="30" value="7" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label"><i class="fas fa-wallet" style="color:var(--gold)"></i> Total Budget (INR) *</label>
+                        <input type="number" name="budget" class="form-control" min="1000" step="500" placeholder="e.g. 15000" value="15000" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label"><i class="fas fa-users" style="color:var(--primary)"></i> Group Type</label>
+                        <select name="group_type" class="form-control">
+                            <option value="solo">Solo Traveler</option>
+                            <option value="couple">Couple</option>
+                            <option value="family">Family</option>
+                            <option value="group">Group (6+)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label"><i class="fas fa-heart" style="color:var(--accent)"></i> Travel Style</label>
+                        <select name="travel_style" class="form-control">
+                            <option value="">Any</option>
+                            <option value="adventure">Adventure</option>
+                            <option value="relaxation">Relaxation & Spa</option>
+                            <option value="cultural">Cultural & Heritage</option>
+                            <option value="culinary">Culinary & Food</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label"><i class="fas fa-utensils" style="color:var(--accent)"></i> Include Food/Meals?</label>
+                        <select name="include_food" class="form-control">
+                            <option value="1">Yes, include food budget</option>
+                            <option value="0" selected>No, I will manage food separately</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label"><i class="fas fa-compass" style="color:var(--secondary)"></i> Interests (select all that apply)</label>
+                    <div style="display:flex;flex-wrap:wrap;gap:.75rem;margin-top:.5rem">
+                                                <label style="display:flex;align-items:center;gap:.5rem;padding:.5rem 1rem;background:var(--surface2);border:1px solid var(--border);border-radius:50px;cursor:pointer;font-size:.88rem;transition:.2s" class="interest-label">
+                            <input type="checkbox" name="interests[]" value="adventure" style="display:none"> 🧗 Adventure
+                        </label>
+                                                <label style="display:flex;align-items:center;gap:.5rem;padding:.5rem 1rem;background:var(--surface2);border:1px solid var(--border);border-radius:50px;cursor:pointer;font-size:.88rem;transition:.2s" class="interest-label">
+                            <input type="checkbox" name="interests[]" value="culinary" style="display:none"> 🍜 Culinary
+                        </label>
+                                                <label style="display:flex;align-items:center;gap:.5rem;padding:.5rem 1rem;background:var(--surface2);border:1px solid var(--border);border-radius:50px;cursor:pointer;font-size:.88rem;transition:.2s" class="interest-label">
+                            <input type="checkbox" name="interests[]" value="heritage" style="display:none"> 🏛️ Heritage
+                        </label>
+                                                <label style="display:flex;align-items:center;gap:.5rem;padding:.5rem 1rem;background:var(--surface2);border:1px solid var(--border);border-radius:50px;cursor:pointer;font-size:.88rem;transition:.2s" class="interest-label">
+                            <input type="checkbox" name="interests[]" value="ecotourism" style="display:none"> 🌿 Ecotourism
+                        </label>
+                                                <label style="display:flex;align-items:center;gap:.5rem;padding:.5rem 1rem;background:var(--surface2);border:1px solid var(--border);border-radius:50px;cursor:pointer;font-size:.88rem;transition:.2s" class="interest-label">
+                            <input type="checkbox" name="interests[]" value="relaxation" style="display:none"> 🧘 Relaxation
+                        </label>
+                                                <label style="display:flex;align-items:center;gap:.5rem;padding:.5rem 1rem;background:var(--surface2);border:1px solid var(--border);border-radius:50px;cursor:pointer;font-size:.88rem;transition:.2s" class="interest-label">
+                            <input type="checkbox" name="interests[]" value="urban" style="display:none"> 🏙️ Urban Explorer
+                        </label>
+                                            </div>
+                </div>
+
+                <div style="text-align:center;margin-top:2rem">
+                    <button type="submit" class="btn btn-primary" style="padding:1rem 3rem;font-size:1.1rem" id="generate-btn">
+                        <i class="fas fa-wand-magic-sparkles"></i> Generate AI Itinerary
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        
+        <div id="result-container" style="display:none;margin-top:2rem">
+            <div class="card" style="padding:2rem">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem">
+                    <div>
+                        <h2 style="font-weight:800;font-size:1.4rem" id="res-title">Your Itinerary</h2>
+                        <div style="font-size:.85rem;color:var(--muted)" id="res-meta"></div>
+                    </div>
+                    <div id="res-badges" style="display:flex;gap:.5rem;flex-wrap:wrap"></div>
+                </div>
+                <div id="days-container"></div>
+                <div style="margin-top:1.5rem;text-align:center;display:flex;gap:1rem;justify-content:center;">
+                    <a id="view-btn" href="#" class="btn btn-primary" style="padding:.85rem 2rem;font-size:1rem"><i class="fas fa-eye"></i> View Full Itinerary</a>
+                    <a id="download-btn" href="#" class="btn btn-outline" style="padding:.85rem 2rem;font-size:1rem;background:#1565c0;color:#fff;border:none;"><i class="fas fa-download"></i> Download PDF</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+.interest-label:has(input:checked) { background:rgba(108,99,255,.2);border-color:var(--primary);color:var(--primary); }
+.day-card { background:var(--surface2);border-radius:12px;margin-bottom:1rem;overflow:hidden; }
+.day-header { padding:.75rem 1.25rem;background:rgba(108,99,255,.1);border-bottom:1px solid var(--border);font-weight:700;cursor:pointer;display:flex;justify-content:space-between; }
+.day-slots { padding:1rem 1.25rem; }
+.slot-row { display:flex;gap:1rem;padding:.6rem 0;border-bottom:1px solid var(--border);font-size:.88rem; }
+.slot-time { color:var(--muted);min-width:120px;font-size:.8rem; }
+</style>
+
+<script>
+const localPlaces = [];
+
+function editDistance(s1, s2) {
+    s1 = s1.toLowerCase();
+    s2 = s2.toLowerCase();
+    let costs = [];
+    for (let i = 0; i <= s1.length; i++) {
+        let lastValue = i;
+        for (let j = 0; j <= s2.length; j++) {
+            if (i == 0) costs[j] = j;
+            else {
+                if (j > 0) {
+                    let newValue = costs[j - 1];
+                    if (s1.charAt(i - 1) != s2.charAt(j - 1)) {
+                        newValue = Math.min(Math.min(newValue, lastValue), costs[j]) + 1;
+                    }
+                    costs[j - 1] = lastValue;
+                    lastValue = newValue;
+                }
+            }
+        }
+        if (i > 0) costs[s2.length] = lastValue;
+    }
+    return costs[s2.length];
+}
+
+function getSimilarity(s1, s2) {
+    let longer = s1;
+    let shorter = s2;
+    if (s1.length < s2.length) {
+        longer = s2;
+        shorter = s1;
+    }
+    let longerLength = longer.length;
+    if (longerLength === 0) return 1.0;
+    return (longerLength - editDistance(longer, shorter)) / parseFloat(longerLength);
+}
+
+function detectLiveOrigin() {
+    const input = document.getElementById('origin-input');
+    input.value = "Detecting live GPS node...";
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(async pos => {
+            try {
+                const res = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${pos.coords.latitude}&lon=${pos.coords.longitude}&format=json`);
+                const data = await res.json();
+                const city = data.address.city || data.address.town || data.address.village || data.address.county || "Phagwara";
+                const state = data.address.state || "Punjab";
+                input.value = `${city}, ${state}`;
+            } catch(e) {
+                input.value = "Phagwara, Punjab";
+            }
+        }, err => {
+            input.value = "Phagwara, Punjab";
+        });
+    } else {
+        input.value = "Phagwara, Punjab";
+    }
+}
+
+document.getElementById('itinerary-form').addEventListener('submit', async e => {
+    e.preventDefault();
+    const btn = document.getElementById('generate-btn');
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating...';
+    btn.disabled = true;
+
+    const form = e.target;
+    const data = Object.fromEntries(new FormData(form).entries());
+    data['interests[]'] = [...form.querySelectorAll('[name="interests[]"]:checked')].map(i=>i.value);
+
+    try {
+        const res = await fetch('http://localhost:8100/itineraries/generate', {
+            method:'POST', headers:{'Content-Type':'application/json','X-CSRF-TOKEN':''},
+            body: JSON.stringify(data)
+        });
+        const json = await res.json();
+        if (json.success) { renderResult(json.plan, json.itinerary); }
+        else { alert('Generation failed. Please try again.'); }
+    } catch(err) { alert('Error: ' + err.message); }
+    finally { btn.innerHTML = '<i class="fas fa-wand-magic-sparkles"></i> Generate AI Itinerary'; btn.disabled = false; }
+});
+
+// --- Origin Autocomplete (Local Database + Free Nominatim API) ---
+const originInput = document.getElementById('origin-input');
+const autocompleteBox = document.getElementById('origin-autocomplete');
+let timeout = null;
+
+originInput.addEventListener('focus', function() {
+    this.closest('.form-group').style.zIndex = '9999';
+});
+originInput.addEventListener('blur', function() {
+    setTimeout(() => { this.closest('.form-group').style.zIndex = ''; }, 200);
+});
+
+originInput.addEventListener('input', function() {
+    clearTimeout(timeout);
+    const query = this.value.trim();
+    
+    if (query.length < 2) {
+        autocompleteBox.style.display = 'none';
+        return;
+    }
+
+    // Show searching state
+    autocompleteBox.innerHTML = '<div style="padding:.75rem 1rem;color:var(--muted);font-size:.85rem"><i class="fas fa-spinner fa-spin"></i> Searching cities...</div>';
+    autocompleteBox.style.display = 'block';
+
+    timeout = setTimeout(async () => {
+        try {
+            const queryLower = query.toLowerCase();
+            
+            // 1. Search local places
+            let localMatches = [];
+            if (typeof localPlaces !== 'undefined' && Array.isArray(localPlaces)) {
+                localMatches = localPlaces.filter(p => {
+                    const name = (p.name || '').toLowerCase();
+                    const city = (p.city || '').toLowerCase();
+                    const state = (p.state || '').toLowerCase();
+                    
+                    if (name.includes(queryLower) || city.includes(queryLower) || state.includes(queryLower)) {
+                        return true;
+                    }
+                    
+                    if (getSimilarity(name, queryLower) > 0.75 || getSimilarity(city, queryLower) > 0.75) {
+                        return true;
+                    }
+                    
+                    return false;
+                }).map(p => ({
+                    city: p.city || p.name,
+                    state: p.state || 'India',
+                    isLocal: true
+                }));
+            }
+
+            // 2. Fetch from backend proxy
+            let apiMatches = [];
+            try {
+                const response = await fetch(`/api/city-search?q=${encodeURIComponent(query)}`);
+                const data = await response.json();
+                apiMatches = data.map(place => {
+                    const city = place.address.city || place.address.town || place.address.village || place.name;
+                    const state = place.address.state || 'India';
+                    return { city, state, isLocal: false };
+                });
+            } catch (apiErr) {
+                console.error("Nominatim API failed, relying on local search", apiErr);
+            }
+
+            // Combine both lists, keeping local matches at the top and removing duplicates
+            const combined = [...localMatches];
+            apiMatches.forEach(apiItem => {
+                const exists = combined.some(localItem => 
+                    localItem.city.toLowerCase() === apiItem.city.toLowerCase()
+                );
+                if (!exists) {
+                    combined.push(apiItem);
+                }
+            });
+
+            if (combined.length === 0) {
+                autocompleteBox.innerHTML = '<div style="padding:.75rem 1rem;color:var(--muted);font-size:.85rem">No cities found.</div>';
+                return;
+            }
+
+            autocompleteBox.innerHTML = '';
+            combined.forEach(place => {
+                const item = document.createElement('div');
+                item.style.cssText = 'padding:.75rem 1rem;cursor:pointer;border-bottom:1px solid rgba(255,255,255,0.08);transition:background .2s;display:flex;align-items:center;justify-content:space-between;gap:.5rem';
+                
+                const badgeHtml = place.isLocal 
+                    ? `<span style="font-size:0.7rem;background:rgba(108,99,255,0.15);color:#00f0ff;padding:2px 6px;border-radius:4px;font-weight:700">✨ Recommended</span>`
+                    : '';
+
+                item.innerHTML = `
+                    <div style="display:flex;align-items:center;gap:.5rem">
+                        <i class="fas fa-location-dot" style="color:rgba(255,255,255,0.4);font-size:.8rem"></i> 
+                        <div>
+                            <div style="font-weight:700;font-size:.9rem;color:#ffffff">${place.city}</div>
+                            <div style="font-size:.75rem;color:rgba(255,255,255,0.5)">${place.state}</div>
+                        </div>
+                    </div>
+                    ${badgeHtml}
+                `;
+                
+                item.onmouseenter = () => item.style.background = 'rgba(255, 255, 255, 0.08)';
+                item.onmouseleave = () => item.style.background = 'transparent';
+                
+                item.onclick = () => {
+                    originInput.value = `${place.city}, ${place.state}`;
+                    autocompleteBox.style.display = 'none';
+                };
+                
+                autocompleteBox.appendChild(item);
+            });
+        } catch (error) {
+            autocompleteBox.innerHTML = '<div style="padding:.75rem 1rem;color:#e74c3c;font-size:.85rem">Error loading cities.</div>';
+        }
+    }, 500);
+});
+
+// Close dropdown when clicking outside
+document.addEventListener('click', function(e) {
+    if (!originInput.contains(e.target) && !autocompleteBox.contains(e.target)) {
+        autocompleteBox.style.display = 'none';
+    }
+    if (!document.getElementById('dest-input').contains(e.target) && !document.getElementById('dest-autocomplete').contains(e.target)) {
+        document.getElementById('dest-autocomplete').style.display = 'none';
+    }
+});
+
+// --- Destination Autocomplete (Local Database + Free Nominatim API) ---
+const destInput = document.getElementById('dest-input');
+const destAutocompleteBox = document.getElementById('dest-autocomplete');
+let destTimeout = null;
+
+destInput.addEventListener('focus', function() {
+    this.closest('.form-group').style.zIndex = '9999';
+});
+destInput.addEventListener('blur', function() {
+    setTimeout(() => { this.closest('.form-group').style.zIndex = ''; }, 200);
+});
+
+destInput.addEventListener('input', function() {
+    clearTimeout(destTimeout);
+    const query = this.value.trim();
+    
+    if (query.length < 2) {
+        destAutocompleteBox.style.display = 'none';
+        return;
+    }
+
+    destAutocompleteBox.innerHTML = '<div style="padding:.75rem 1rem;color:var(--muted);font-size:.85rem"><i class="fas fa-spinner fa-spin"></i> Searching destinations...</div>';
+    destAutocompleteBox.style.display = 'block';
+
+    destTimeout = setTimeout(async () => {
+        try {
+            const queryLower = query.toLowerCase();
+            
+            // 1. Search local places
+            let localMatches = [];
+            if (typeof localPlaces !== 'undefined' && Array.isArray(localPlaces)) {
+                localMatches = localPlaces.filter(p => {
+                    const name = (p.name || '').toLowerCase();
+                    const city = (p.city || '').toLowerCase();
+                    const country = (p.country || '').toLowerCase();
+                    
+                    if (name.includes(queryLower) || city.includes(queryLower) || country.includes(queryLower)) {
+                        return true;
+                    }
+                    
+                    if (getSimilarity(name, queryLower) > 0.75 || getSimilarity(city, queryLower) > 0.75) {
+                        return true;
+                    }
+                    
+                    return false;
+                }).map(p => ({
+                    city: p.city || p.name,
+                    country: p.country || 'India',
+                    isLocal: true
+                }));
+            }
+
+            // 2. Fetch from backend proxy
+            let apiMatches = [];
+            try {
+                const response = await fetch(`/api/city-search?q=${encodeURIComponent(query)}`);
+                const data = await response.json();
+                apiMatches = data.map(place => {
+                    const city = place.address.city || place.address.town || place.address.village || place.name;
+                    const country = place.address.country || '';
+                    return { city, country, isLocal: false };
+                });
+            } catch (apiErr) {
+                console.error("Nominatim API failed, relying on local search", apiErr);
+            }
+
+            // Combine both lists, keeping local matches at the top and removing duplicates
+            const combined = [...localMatches];
+            apiMatches.forEach(apiItem => {
+                const exists = combined.some(localItem => 
+                    localItem.city.toLowerCase() === apiItem.city.toLowerCase()
+                );
+                if (!exists) {
+                    combined.push(apiItem);
+                }
+            });
+
+            if (combined.length === 0) {
+                destAutocompleteBox.innerHTML = '<div style="padding:.75rem 1rem;color:var(--muted);font-size:.85rem">No locations found.</div>';
+                return;
+            }
+
+            destAutocompleteBox.innerHTML = '';
+            combined.forEach(place => {
+                const item = document.createElement('div');
+                item.style.cssText = 'padding:.75rem 1rem;cursor:pointer;border-bottom:1px solid rgba(255,255,255,0.08);transition:background .2s;display:flex;align-items:center;justify-content:space-between;gap:.5rem';
+                
+                const badgeHtml = place.isLocal 
+                    ? `<span style="font-size:0.7rem;background:rgba(108,99,255,0.15);color:#00f0ff;padding:2px 6px;border-radius:4px;font-weight:700">✨ Recommended</span>`
+                    : '';
+
+                item.innerHTML = `
+                    <div style="display:flex;align-items:center;gap:.5rem">
+                        <i class="fas fa-globe" style="color:rgba(255,255,255,0.4);font-size:.8rem"></i> 
+                        <div>
+                            <div style="font-weight:700;font-size:.9rem;color:#ffffff">${place.city}</div>
+                            <div style="font-size:.75rem;color:rgba(255,255,255,0.5)">${place.country}</div>
+                        </div>
+                    </div>
+                    ${badgeHtml}
+                `;
+                
+                item.onmouseenter = () => item.style.background = 'rgba(255, 255, 255, 0.08)';
+                item.onmouseleave = () => item.style.background = 'transparent';
+                
+                item.onclick = () => {
+                    destInput.value = `${place.city}, ${place.country}`;
+                    destAutocompleteBox.style.display = 'none';
+                };
+                
+                destAutocompleteBox.appendChild(item);
+            });
+        } catch (error) {
+            destAutocompleteBox.innerHTML = '<div style="padding:.75rem 1rem;color:#e74c3c;font-size:.85rem">Error loading locations.</div>';
+        }
+    }, 500);
+});
+
+function renderResult(plan, itinerary) {
+    const formatCurrency = (amount, c) => {
+        if (!c || c.code === 'INR') return `₹${amount.toLocaleString()}`;
+        const foreign = amount / c.rate;
+        const fAmt = foreign > 100 ? Math.round(foreign).toLocaleString() : foreign.toFixed(2);
+        return `${c.symbol}${fAmt} <span style="font-size:0.8em;opacity:0.8">(₹${amount.toLocaleString()})</span>`;
+    };
+
+    document.getElementById('res-title').textContent = '📍 ' + plan.origin + ' ➔ ' + plan.destination + ' (' + plan.total_days + ' Days)';
+    document.getElementById('res-meta').textContent = `${plan.start_date} to ${plan.end_date} • Algorithm: ${plan.algorithm}`;
+    const badges = document.getElementById('res-badges');
+    const fit = plan.budget_fit === 'within_budget';
+    badges.innerHTML = `
+        <span class="badge-pill ${fit?'badge-success':'badge-danger'}">${fit?'✅ Within Budget':'⚠️ Over Budget'}</span>
+        <span class="badge-pill badge-warning">AI Score: ${plan.optimization_score}%</span>
+        <span class="badge-pill badge-primary">Est. ${formatCurrency(plan.total_estimated_cost, plan.currency)}</span>
+    `;
+
+    // Financial Breakdown Section (Blurred for free users)
+    const fin = plan.financial_summary;
+    let finHtml = '';
+    if (fin) {
+        finHtml = `
+            <div style="background:rgba(108,99,255,.05);border:1px solid rgba(108,99,255,.2);border-radius:12px;padding:1.5rem;margin-bottom:1.5rem;position:relative;overflow:hidden;">
+                <h3 style="font-size:1.1rem;font-weight:800;margin-bottom:1rem;display:flex;align-items:center;gap:.5rem">
+                    <i class="fas fa-wallet" style="color:var(--primary)"></i> Financial Breakdown <span style="font-size:0.75rem;color:#ffaa00;background:rgba(255,170,0,0.1);padding:2px 8px;border-radius:50px;margin-left:0.5rem;"><i class="fas fa-lock"></i> Premium</span>
+                </h3>
+                <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(180px, 1fr));gap:1rem;margin-bottom:1rem;filter:blur(5px);pointer-events:none;user-select:none;">
+                    <div style="background:rgba(255,255,255,0.04);padding:1rem;border-radius:8px;border:1px solid var(--border)">
+                        <div style="font-size:.75rem;color:var(--muted);text-transform:uppercase;font-weight:700">✈️ Flight (Round Trip)</div>
+                        <div style="font-size:1.1rem;font-weight:800;color:var(--text)">${formatCurrency(fin.travel_flight, plan.currency)}</div>
+                        <div style="font-size:.7rem;color:var(--muted)">Est. airfare from ${plan.origin.split(',')[0]}</div>
+                    </div>
+                    <div style="background:rgba(255,255,255,0.04);padding:1rem;border-radius:8px;border:1px solid var(--border)">
+                        <div style="font-size:.75rem;color:var(--muted);text-transform:uppercase;font-weight:700">🚆 Train (Round Trip)</div>
+                        <div style="font-size:1.1rem;font-weight:800;color:var(--text)">${formatCurrency(fin.travel_train, plan.currency)}</div>
+                        <div style="font-size:.7rem;color:var(--muted)">Est. rail fare (used for total)</div>
+                    </div>
+                    <div style="background:rgba(255,255,255,0.04);padding:1rem;border-radius:8px;border:1px solid var(--border)">
+                        <div style="font-size:.75rem;color:var(--muted);text-transform:uppercase;font-weight:700">🏨 Room Rents</div>
+                        <div style="font-size:1.1rem;font-weight:800;color:var(--text)">${formatCurrency(fin.room_cost, plan.currency)}</div>
+                        <div style="font-size:.7rem;color:var(--muted)">For ${plan.total_days - 1} nights</div>
+                    </div>
+                    <div style="background:rgba(255,255,255,0.04);padding:1rem;border-radius:8px;border:1px solid var(--border)">
+                        <div style="font-size:.75rem;color:var(--muted);text-transform:uppercase;font-weight:700">📸 Activities</div>
+                        <div style="font-size:1.1rem;font-weight:800;color:var(--text)">${formatCurrency(fin.activity_cost, plan.currency)}</div>
+                        <div style="font-size:.7rem;color:var(--muted)">Sightseeing & traditions</div>
+                    </div>
+                    ${fin.food_cost > 0 ? `
+                    <div style="background:rgba(255,255,255,0.04);padding:1rem;border-radius:8px;border:1px solid var(--border)">
+                        <div style="font-size:.75rem;color:var(--muted);text-transform:uppercase;font-weight:700">🍔 Food & Dining</div>
+                        <div style="font-size:1.1rem;font-weight:800;color:var(--text)">${formatCurrency(fin.food_cost, plan.currency)}</div>
+                        <div style="font-size:.7rem;color:var(--muted)">For ${plan.total_days} days</div>
+                    </div>` : ''}
+                </div>
+                <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(250px, 1fr));gap:1rem;filter:blur(5px);pointer-events:none;user-select:none;">
+                    ${fin.recommended_train ? `
+                    <div style="background:rgba(255,255,255,0.04);padding:1rem 1.25rem;border-radius:8px;border-left:4px solid var(--secondary);display:flex;flex-direction:column;justify-content:center;border-top:1px solid var(--border);border-right:1px solid var(--border);border-bottom:1px solid var(--border);">
+                        <div style="font-size:.85rem;font-weight:700;color:var(--text);display:flex;align-items:center;gap:.35rem"><i class="fas fa-train" style="color:var(--secondary)"></i> Train Journey Plan</div>
+                        <div style="font-size:.75rem;color:var(--muted);margin-bottom:.5rem">Recommended total including buffer.</div>
+                        <div style="font-size:1.2rem;font-weight:900;color:var(--secondary)">${formatCurrency(fin.recommended_train, plan.currency)}</div>
+                    </div>` : ''}
+                    ${fin.recommended_flight ? `
+                    <div style="background:rgba(255,255,255,0.04);padding:1rem 1.25rem;border-radius:8px;border-left:4px solid var(--gold);display:flex;flex-direction:column;justify-content:center;border-top:1px solid var(--border);border-right:1px solid var(--border);border-bottom:1px solid var(--border);">
+                        <div style="font-size:.85rem;font-weight:700;color:var(--text);display:flex;align-items:center;gap:.35rem"><i class="fas fa-plane" style="color:var(--gold)"></i> Flight Journey Plan</div>
+                        <div style="font-size:.75rem;color:var(--muted);margin-bottom:.5rem">Recommended total including buffer.</div>
+                        <div style="font-size:1.2rem;font-weight:900;color:var(--gold)">${formatCurrency(fin.recommended_flight, plan.currency)}</div>
+                    </div>` : ''}
+                </div>
+    const container = document.getElementById('days-container');
+    
+    // Enforce paywall: Day 1 is visible, Day 2 and onwards are blurred/locked if NOT paid
+    const daysHtml = plan.days.map((day, i) => {
+        if (i === 0 || itinerary.is_paid) {
+            return `
+                <div class="day-card">
+                    <div class="day-header" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'">
+                        <span>${day.label}</span>
+                        <span style="color:var(--secondary)">Est. ${formatCurrency(day.day_cost, plan.currency)} ↕</span>
+                    </div>
+                    <div class="day-slots">
+                        <div style="margin-bottom:.75rem;font-size:.82rem;color:var(--gold)">${day.weather_tip}</div>
+                        ${day.slots.map(s => `
+                        <div class="slot-row">
+                            <div class="slot-time">${s.time}</div>
+                            <div>
+                                <div style="font-weight:600">${s.activity}</div>
+                                <div style="color:var(--muted);font-size:.8rem">${s.notes}</div>
+                                <div style="font-size:.78rem;color:var(--secondary);margin-top:.2rem">Est. ${formatCurrency(s.est_cost, plan.currency)}</div>
+                            </div>
+                        </div>`).join('')}
+                    </div>
+                </div>
+            `;
+        } else {
+            return `
+                <div class="day-card" style="border-radius:12px; overflow:hidden; background:rgba(255,255,255,0.01); border:1px dashed rgba(255,255,255,0.1); opacity:0.35; filter:blur(2px); pointer-events:none; user-select:none; margin-bottom:1rem; transition:all 0.3s; position:relative; cursor:pointer;" onclick="window.location.href='/itineraries/'+itinerary.id">
+                    <div class="day-header" style="padding:.75rem 1.25rem; display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.1);">
+                        <div style="display:flex; align-items:center; gap:1rem;">
+                            <span style="font-weight:800; font-size:1rem; color:rgba(255,255,255,0.4);">${day.label} — Premium Only</span>
+                        </div>
+                        <div>
+                            <i class="fas fa-lock" style="color:#ff7b00; font-size:1.1rem;"></i>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+    }).join('');
+
+    // Beautiful Paywall Promo card at the bottom of the container
+    let paywallPromoHtml = '';
+    if (!itinerary.is_paid) {
+        paywallPromoHtml = `
+            <div class="card" style="margin-top:2rem; padding:2rem 1.5rem; border-radius:16px; background:linear-gradient(135deg, #0e1e38 0%, #050e21 100%); border:1px solid rgba(255,111,0,0.25); text-align:center; position:relative; overflow:hidden; box-shadow:0 15px 30px rgba(0,0,0,0.4); margin-bottom:1.5rem;">
+                <div style="position:relative; z-index:1;">
+                    <div style="width:45px; height:45px; margin:0 auto 1rem; background:rgba(255,111,0,0.1); border-radius:50%; display:flex; align-items:center; justify-content:center; border:1px solid rgba(255,111,0,0.2);">
+                        <i class="fas fa-lock" style="color:#ff6f00; font-size:1.2rem;"></i>
+                    </div>
+                    <h4 style="font-family:'Playfair Display',serif; font-size:1.4rem; font-weight:800; color:#fff; margin-bottom:0.5rem;">🔒 Premium Plan Locked (Day 2 to ${plan.total_days})</h4>
+                    <p style="color:#b0c4de; max-width:600px; margin:0 auto 1rem; font-size:0.9rem; line-height:1.6;">
+                        Unlock the complete daily schedule, timing slots, custom travel warnings, and full financial breakdowns. Pay a small one-time secure fee to unlock full access.
+                    </p>
+                </div>
+            </div>
+        `;
+    }
+
+    container.innerHTML = finHtml + daysHtml + paywallPromoHtml;
+
+    // Direct the user to the itinerary detail page to trigger payment OR view it fully
+    document.getElementById('view-btn').className = 'btn btn-primary';
+    document.getElementById('view-btn').style.cssText = 'padding:1.1rem 3rem; font-size:1.1rem; border-radius:50px; background:linear-gradient(135deg, #ffca28, #ff6f00); box-shadow:0 8px 25px rgba(255,111,0,0.4); border:none; display:inline-flex; align-items:center; gap:0.5rem; color:#fff; font-weight:800; cursor:pointer;';
+    
+    if (itinerary.is_paid) {
+        document.getElementById('view-btn').innerHTML = '<i class="fas fa-eye"></i> View Full Saved Itinerary';
+        document.getElementById('download-btn').style.display = 'inline-flex';
+    } else {
+        document.getElementById('view-btn').innerHTML = '<i class="fas fa-unlock"></i> View & Unlock Full Itinerary (₹99)';
+        document.getElementById('download-btn').style.display = 'none';
+        
+        // Add overlay blur for financials if not paid
+        const overlay = document.createElement('div');
+        overlay.style.cssText = "position:absolute;inset:0;background:rgba(6,7,19,0.3);backdrop-filter:blur(0.5px);display:flex;align-items:center;justify-content:center;z-index:2;cursor:pointer;";
+        overlay.onclick = () => window.location.href = '/itineraries/' + itinerary.id;
+        overlay.innerHTML = `<div style="background:#151538;border:1px solid rgba(255,111,0,0.3);box-shadow:0 10px 25px rgba(0,0,0,0.5);border-radius:50px;padding:0.75rem 1.5rem;display:flex;align-items:center;gap:0.5rem;color:#fff;font-weight:700;font-size:0.9rem;"><i class="fas fa-lock" style="color:#ffaa00;"></i> Pay ₹99 to Unlock AI Breakdown</div>`;
+        const walletIcon = container.querySelector('.fa-wallet');
+        if (walletIcon) {
+            const finDiv = walletIcon.closest('div').parentElement;
+            if (finDiv) finDiv.appendChild(overlay);
+        }
+    }
+    
+    document.getElementById('view-btn').href = itinerary.id ? `/itineraries/${itinerary.id}` : '#';
+
+    document.getElementById('result-container').style.display = 'block';
+    document.getElementById('result-container').scrollIntoView({behavior:'smooth'});
+}
+</script>
+</main>
+
+
+<footer>
+    <div class="footer-inner">
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <div class="nav-logo">✈️ TravelMate</div>
+                <p>AI-powered travel ecosystem that delivers hyper-personalized itineraries, smart bookings, and real-time travel intelligence.</p>
+                <div class="footer-social">
+                    <a href="#" class="social-btn"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="social-btn"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="social-btn"><i class="fab fa-facebook"></i></a>
+                    <a href="#" class="social-btn"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            <div class="footer-col"><h4>Explore</h4><ul>
+                <li><a href="http://localhost:8100/destinations">Destinations</a></li>
+                <li><a href="http://localhost:8100/packages">Travel Packages</a></li>
+                <li><a href="http://localhost:8100/itineraries/create">Plan Itinerary</a></li>
+                <li><a href="http://localhost:8100/chatbot">AI Chatbot</a></li>
+            </ul></div>
+            <div class="footer-col"><h4>Account</h4><ul>
+                <li><a href="http://localhost:8100/dashboard">Dashboard</a></li>
+                <li><a href="http://localhost:8100/bookings">My Bookings</a></li>
+                <li><a href="http://localhost:8100/expenses">Expense Tracker</a></li>
+                <li><a href="http://localhost:8100/wishlist">Wishlist</a></li>
+            </ul></div>
+            <div class="footer-col"><h4>Support</h4><ul>
+                <li><a href="http://localhost:8100/contact">Contact Us</a></li>
+                <li><a href="http://localhost:8100/about">About TravelMate</a></li>
+                <li><a href="#">Privacy Policy</a></li>
+                <li><a href="#">Terms of Service</a></li>
+            </ul></div>
+        </div>
+        <div class="footer-bottom">
+            <span>© 2026 TravelMate. All rights reserved.</span>
+            <span>Built with ❤️ for Final Year Project • Laravel MVC</span>
+        </div>
+    </div>
+</footer>
+
+
+
+<script>
+let chatSession = null;
+function toggleChatbot() {
+    const box = document.getElementById('chatbot-box');
+    box.classList.toggle('open');
+}
+function sendSuggestion(el) { document.getElementById('chatbot-input').value = el.textContent.trim(); sendChat(); }
+async function sendChat() {
+    const input = document.getElementById('chatbot-input');
+    const msg = input.value.trim(); if (!msg) return;
+    addChatMsg(msg, 'user'); input.value = '';
+    const typing = addChatMsg('...', 'bot');
+    try {
+        const res = await fetch('http://localhost:8100/chatbot/send', {
+            method:'POST', headers:{'Content-Type':'application/json','X-CSRF-TOKEN':''},
+            body: JSON.stringify({ message: msg, session_id: chatSession })
+        });
+        const data = await res.json();
+        chatSession = data.session_id;
+        typing.remove();
+        const botEl = addChatMsg(data.response.text, 'bot', true);
+        if (data.response.suggestions?.length) {
+            const sug = document.createElement('div');
+            sug.className = 'chat-suggestions';
+            data.response.suggestions.forEach(s => {
+                const span = document.createElement('span');
+                span.className = 'chat-suggestion'; span.textContent = s;
+                span.onclick = () => sendSuggestion(span);
+                sug.appendChild(span);
+            });
+            botEl.after(sug);
+        }
+    } catch(e) { typing.textContent = 'Connection error. Please try again.'; }
+}
+function addChatMsg(text, role, markdown=false) {
+    const body = document.getElementById('chatbot-messages');
+    
+    if (role === 'user') {
+        const div = document.createElement('div');
+        div.className = 'chat-msg user';
+        div.textContent = text;
+        body.appendChild(div);
+        body.scrollTop = body.scrollHeight;
+        return div;
+    } else {
+        const block = document.createElement('div');
+        block.className = 'chat-block';
+        
+        const lbl = document.createElement('div');
+        lbl.className = 'chat-sender-lbl';
+        lbl.innerHTML = '<i class="fas fa-robot"></i> NEURAL ENTITY';
+        block.appendChild(lbl);
+        
+        const msg = document.createElement('div');
+        msg.className = 'chat-msg bot';
+        msg.innerHTML = markdown ? text.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>') : text;
+        block.appendChild(msg);
+        
+        body.appendChild(block);
+        body.scrollTop = body.scrollHeight;
+        return msg;
+    }
+}
+// Auto-dismiss alerts
+setTimeout(() => { document.querySelectorAll('.alert').forEach(a => a.style.opacity = '0'); }, 4000);
+
+// Global Live Clock
+setInterval(() => {
+    const el = document.getElementById('global-live-clock');
+    if(el) {
+        el.innerText = new Date().toLocaleTimeString('en-US', { hour12: true, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    }
+}, 1000);
+</script>
+</body>
+</html>

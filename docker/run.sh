@@ -1,4 +1,4 @@
-﻿#!/bin/sh
+#!/bin/sh
 set -e
 
 # Dynamically set Nginx port from $PORT env variable provided by Render (default to 80)

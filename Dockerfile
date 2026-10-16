@@ -1,4 +1,4 @@
-﻿# Stage 1: Build Vite assets using Node.js
+# Stage 1: Build Vite assets using Node.js
 FROM node:20-alpine AS node-builder
 WORKDIR /app
 COPY package*.json ./
@@ -75,11 +75,11 @@ COPY docker/nginx.conf /etc/nginx/nginx.conf
 COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY docker/run.sh /usr/local/bin/run.sh
 
-# Ensure startup script is executable
-RUN chmod +x /usr/local/bin/run.sh
+# Ensure startup script is executable and has Unix line endings
+RUN sed -i 's/\r$//' /usr/local/bin/run.sh && chmod +x /usr/local/bin/run.sh
 
 # Expose port (Render sets $PORT)
 EXPOSE 80
 
 # Start via startup script
-ENTRYPOINT ["/usr/local/bin/run.sh"]
+ENTRYPOINT ["/bin/sh", "/usr/local/bin/run.sh"]

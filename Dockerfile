@@ -17,6 +17,7 @@ RUN apk add --no-cache \
     curl \
     libpng-dev \
     libxml2-dev \
+    sqlite-dev \
     zip \
     unzip \
     git \
@@ -28,7 +29,7 @@ RUN apk add --no-cache \
     openssl-dev
 
 # Install PHP extensions
-RUN docker-php-ext-install pdo_pgsql pdo_mysql bcmath gd opcache mbstring
+RUN docker-php-ext-install pdo_pgsql pdo_mysql pdo_sqlite bcmath gd opcache mbstring
 
 # Install and enable MongoDB PHP extension
 RUN pecl install mongodb && docker-php-ext-enable mongodb

@@ -5,22 +5,27 @@ set -e
 if [ -n "$PORT" ]; then
     echo "Configuring Nginx to listen on port $PORT"
     sed -i "s/listen 80;/listen $PORT;/g" /etc/nginx/nginx.conf
-    sed -i "s/listen \[::\]:80;/listen [::]:$PORT;/g" /etc/nginx/nginx.conf
 else
     echo "No PORT environment variable detected, defaulting to 80"
 fi
 
 # Fix storage permissions at runtime (Render overlayfs can reset permissions)
-echo "Fixing storage permissions..."
+echo "Fixing storage and database permissions..."
 mkdir -p /var/www/storage/logs \
          /var/www/storage/framework/cache/data \
          /var/www/storage/framework/sessions \
          /var/www/storage/framework/views \
-         /var/www/bootstrap/cache
+         /var/www/bootstrap/cache \
+         /var/www/database
 
 touch /var/www/storage/logs/laravel.log
-chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
-chmod -R 775 /var/www/storage /var/www/bootstrap/cache
+touch /var/www/database/database.sqlite
+chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache /var/www/database
+chmod -R 775 /var/www/storage /var/www/bootstrap/cache /var/www/database
+
+if [ -z "$APP_KEY" ]; then
+    echo "WARNING: APP_KEY is empty! Please set APP_KEY in Render Environment Variables to avoid 500 errors."
+fi
 
 # Run caching optimizations as www-data (same user as php-fpm) to avoid permission conflicts
 echo "Optimizing Laravel configurations..."

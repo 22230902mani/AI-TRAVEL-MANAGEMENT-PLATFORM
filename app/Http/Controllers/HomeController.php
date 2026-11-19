@@ -18,16 +18,29 @@ class HomeController extends Controller
             return redirect()->route('dashboard');
         }
 
-        $featured_destinations = Destination::active()->featured()->with('packages')->limit(6)->get();
-        $featured_packages     = Package::active()->featured()->with('destination')->limit(6)->get();
-        $recent_reviews        = Review::verified()->notFlagged()->with('user')->latest()->limit(6)->get();
-        
-        $stats = [
-            'destinations' => Destination::active()->count(),
-            'packages'     => Package::active()->count(),
-            'travelers'    => \App\Models\User::count(),
-            'reviews'      => Review::verified()->count(),
-        ];
+        try {
+            $featured_destinations = Destination::active()->featured()->with('packages')->limit(6)->get();
+            $featured_packages     = Package::active()->featured()->with('destination')->limit(6)->get();
+            $recent_reviews        = Review::verified()->notFlagged()->with('user')->latest()->limit(6)->get();
+            
+            $stats = [
+                'destinations' => Destination::active()->count(),
+                'packages'     => Package::active()->count(),
+                'travelers'    => \App\Models\User::count(),
+                'reviews'      => Review::verified()->count(),
+            ];
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('Home page database query failed: ' . $e->getMessage());
+            $featured_destinations = collect();
+            $featured_packages     = collect();
+            $recent_reviews        = collect();
+            $stats = [
+                'destinations' => 0,
+                'packages'     => 0,
+                'travelers'    => 0,
+                'reviews'      => 0,
+            ];
+        }
 
         // ── Unified Analytics Dashboard Data ──────────────────────────
         $analytics = [

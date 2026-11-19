@@ -24,7 +24,9 @@ chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache /var/www/da
 chmod -R 775 /var/www/storage /var/www/bootstrap/cache /var/www/database
 
 if [ -z "$APP_KEY" ]; then
-    echo "WARNING: APP_KEY is empty! Please set APP_KEY in Render Environment Variables to avoid 500 errors."
+    echo "WARNING: APP_KEY was not set in Render environment. Generating fallback key..."
+    export APP_KEY=$(php /var/www/artisan key:generate --show)
+    echo "Generated fallback APP_KEY: $APP_KEY"
 fi
 
 # Run caching optimizations as www-data (same user as php-fpm) to avoid permission conflicts

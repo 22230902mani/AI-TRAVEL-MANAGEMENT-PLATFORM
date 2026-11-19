@@ -21,7 +21,7 @@ mkdir -p /var/www/storage/logs \
 touch /var/www/storage/logs/laravel.log
 touch /var/www/database/database.sqlite
 chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache /var/www/database
-chmod -R 775 /var/www/storage /var/www/bootstrap/cache /var/www/database
+chmod -R 777 /var/www/storage /var/www/bootstrap/cache /var/www/database
 
 if [ -z "$APP_KEY" ]; then
     echo "WARNING: APP_KEY was not set in Render environment. Generating fallback key..."

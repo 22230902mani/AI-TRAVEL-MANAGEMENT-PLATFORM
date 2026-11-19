@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -20,5 +20,7 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
+        $exceptions->render(function (\Illuminate\Session\TokenMismatchException $e, Request $request) {
+            return back()->withInput()->with('error', 'Your session expired. Please submit again.');
+        });
     })->create();
